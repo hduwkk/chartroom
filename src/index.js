@@ -14,18 +14,27 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import {createStore, applyMiddleware, compose} from 'redux'
+import {BrowserRouter, Route, Redirect, Switch} from 'react-router-dom'
 import thunk from 'redux-thunk'
 import {Provider} from 'react-redux'
-import {counter} from './index.redux'
-import App from './App'
 
-const store = createStore(counter, compose(
+import Auth from './Auth'
+import Dashboard from './Dashboard'
+import reducer from './reducer'
+
+const store = createStore(reducer, compose(
     applyMiddleware(thunk),
     window.devToolsExtension ? window.devToolsExtension() : fn => fn
   ))
-
+console.log(store.getState(), 'store combined ... ...')
 ReactDOM.render(
   (<Provider  store={store}>
-    <App />
+    <BrowserRouter>
+      <Switch>
+          <Route path='/login' component={Auth}></Route>
+				  <Route path='/dashboard' component={Dashboard}></Route>
+				  <Redirect to='/dashboard'></Redirect>
+      </Switch>
+    </BrowserRouter>
   </Provider>),
 document.getElementById('root'))

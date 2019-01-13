@@ -3,7 +3,10 @@ import {connect} from 'react-redux'
 import {addGun, removeGun, addGunAsync} from './index.redux'
 
 @connect(
-  state => ({num: state}),
+  state => {
+    console.log(state, 777)
+    return {num: state.counter}
+  },
   {addGun, removeGun, addGunAsync}
 )
 
