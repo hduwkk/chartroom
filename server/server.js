@@ -1,5 +1,8 @@
 const express = require('express')
 const mongoose = require('mongoose')
+const logger = require('morgan')
+const bodyParser = require('body-parser')
+const cookieParser = require('cookie-parser')
 
 const DB_URL = 'mongodb://localhost:27017'
 mongoose.connect(DB_URL)
@@ -13,7 +16,22 @@ const User = mongoose.model('user', new mongoose.Schema({
 }))
 
 const app = express()
+app.use(logger('dev'))
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(cookieParser())
+
 app.get('/', (req, res) => {
+  User.find({}, function(err, doc) {
+    if (err) {
+      res.send(err)
+    } else {
+      res.send(doc)
+    }
+  })
+})
+
+app.get('/data', (req, res) => {
   User.find({}, function(err, doc) {
     if (err) {
       res.send(err)
@@ -43,6 +61,6 @@ app.get('/deleteall', (req, res) => {
   })
 })
 
-app.listen(9093, () => {
-  console.log('express app listening on port 9093')
+app.listen(3456, () => {
+  console.log('express app listening on port 3456')
 })

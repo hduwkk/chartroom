@@ -17,7 +17,7 @@ import {createStore, applyMiddleware, compose} from 'redux'
 import {BrowserRouter, Route, Redirect, Switch} from 'react-router-dom'
 import thunk from 'redux-thunk'
 import {Provider} from 'react-redux'
-
+import './config'
 import Auth from './Auth'
 import Dashboard from './Dashboard'
 import reducer from './reducer'

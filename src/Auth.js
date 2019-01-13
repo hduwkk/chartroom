@@ -10,11 +10,10 @@ import axios from 'axios'
 
 class Auth extends React.Component {
   componentWillMount() {
-    axios({
-      method: 'get',
-      url: '/data'
-    }).then((data) => {
+    axios.get('/data').then((data) => {
       console.log(data, '... ...')
+    }).catch((e) => {
+      console.log(e, 'error')
     })
   }
   render() {
