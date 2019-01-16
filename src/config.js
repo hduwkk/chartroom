@@ -7,6 +7,6 @@ axios.interceptors.request.use((req) => {
 })
 
 axios.interceptors.response.use((res) => {
-  setTimeout(() => Toast.hide(), 1000)
+  Toast.hide()
   return res
 })
