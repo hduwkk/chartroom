@@ -13,22 +13,24 @@ class NavLinkBar extends React.Component {
     const pathname = this.props.location.pathname
 
     return (
-      <TabBar>
-        {
-          navList.map((v) => (
-            <TabBar.Item
-              key={v.path}
-              title={v.title}
-              icon={{uri: require(`./img/${v.icon}.png`)}}
-              selectedIcon={{uri: require(`./img/${v.icon}-active.png`)}}
-              selected={pathname === v.path}
-              onPress={() => {
-                this.props.history.push(v.path)
-              }}
-            ></TabBar.Item>
-          ))
-        }
-      </TabBar>
+      <footer className="fixed-bottom-bar">
+        <TabBar>
+          {
+            navList.map((v) => (
+              <TabBar.Item
+                key={v.path}
+                title={v.title}
+                icon={{uri: require(`./img/${v.icon}.png`)}}
+                selectedIcon={{uri: require(`./img/${v.icon}-active.png`)}}
+                selected={pathname === v.path}
+                onPress={() => {
+                  this.props.history.push(v.path)
+                }}
+              ></TabBar.Item>
+            ))
+          }
+        </TabBar>
+      </footer>
     )
   }
 }

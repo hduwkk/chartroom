@@ -16,11 +16,13 @@ code {
 .fixd-header.am-navbar {
   position: fixed;
   top: 0;
+  z-index: 999;
   width: 100%;
 }
 
-.am-tab-bar{
+.fixed-bottom-bar{
 	position: fixed;
 	bottom: 0;
 	width: 100%;
+	height: auto;
 }

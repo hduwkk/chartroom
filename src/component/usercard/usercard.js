@@ -11,16 +11,24 @@ class UserCard extends React.Component {
       <WingBlank>
         <WhiteSpace></WhiteSpace>
         {
-          this.props.userlist.map((item) => {
+          this.props.userlist.map((item) => (
             item.avatar ? (
-              <Card.Header title={item.user} thumb={require(`../img/${item.avatar}.png`)}
-                extra={<span>{item.title}</span>}>
+            <Card key={item._id} style={{marginBottom: 10}}>
+              <Card.Header title={item.user} thumb={require(`../img/${item.avatar}.png`)} extra={<span>{item.title}</span>}>
               </Card.Header>
-              <Card.Body></Card.Body>
-            )
-          })
+              <Card.Body>
+                {item.type === 'boss' ? (<b>公司: {item.company}</b>) : null}
+                {item.desc.split('\n').map((d, index) => (
+                  <div key={index}>{d}</div>
+                ))}
+                <div>薪资: {item.money}</div>
+              </Card.Body>
+            </Card>): null
+          ))
         }
       </WingBlank>
     )
   }
 }
+
+export default UserCard
