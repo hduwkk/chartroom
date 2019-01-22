@@ -6,6 +6,7 @@ const Router = express.Router()
 const _filter = {'pwd': 0, '__v': 0} // 过滤不必要的字段
 
 const User = model.getModel('user')
+const Chat = model.getModel('chat')
 
 function md5Pwd(pwd){
 	const salt = 'imooc_is_good_3957x8yza6!@#IUHJh~~'
@@ -18,6 +19,39 @@ Router.get('/list', (req, res) => {
     if (err) return {code: 1, msg: err}
     return res.json({code: 0, data: doc})
   })
+})
+
+Router.get('/getmsglist', (req, res) => {
+  const user = req.cookies.userid
+  User.find({}, function(e, userdoc) {
+    let users = {}
+    userdoc.forEach(({_id, user, avatar}) => {
+      users[_id] = {name: user, avatar}
+    })
+    Chat.find({'$or': []}, function(err, doc) {
+      if (err) {
+        return res.json({code: 1, msgs: [], users: {}})
+      } else {
+        return res.json({code: 0, msgs: doc, users})
+      }
+    })
+  })
+})
+
+Router.post('/readmsg', (req, res) => {
+  const userid = req.cookies.userid
+  const {from} = req.body
+  Chat.update(
+    {from, to: userid},
+    {'$set': {read: true}},
+    {'multi': true},
+    (err, doc) => {
+      if (!err) {
+        return res.json({code: 0, num: doc.nModified})
+      }
+      return res.json({code: 1, msg: '修改失败'})
+    }
+  )
 })
 
 Router.post('/update', (req, res) => {
