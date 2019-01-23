@@ -22,13 +22,13 @@ Router.get('/list', (req, res) => {
 })
 
 Router.get('/getmsglist', (req, res) => {
-  const user = req.cookies.userid
+  const userid = req.cookies.userid
   User.find({}, function(e, userdoc) {
     let users = {}
     userdoc.forEach(({_id, user, avatar}) => {
       users[_id] = {name: user, avatar}
     })
-    Chat.find({'$or': []}, function(err, doc) {
+    Chat.find({'$or': [{from: userid}, {to: userid}]}, function(err, doc) {
       if (err) {
         return res.json({code: 1, msgs: [], users: {}})
       } else {

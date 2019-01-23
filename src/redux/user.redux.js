@@ -4,6 +4,7 @@ const AUTH_SUCCESS = 'AUTH_SUCCESS'
 const LOGOUT = 'LOGOUT'
 const ERROR_MSG = 'ERROR_MSG'
 const LOAD_DATA = 'LODA_DATA'
+const CLEAR_REDIRECT = 'CLEAR_REDIRECT'
 
 const initState = {
   redirectTo: '',
@@ -22,6 +23,8 @@ export function user(state = initState, action) {
       return {...state, isAuth: false, msg: action.msg}
     case LOGOUT: 
       return {...initState, redirectTo: '/login'}
+    case CLEAR_REDIRECT:
+      return {...state, redirectTo: ''}
     default:
       return state
   }
@@ -51,6 +54,10 @@ export function loadData(userInfo) {
 
 export function logoutSubmit() {
   return {type: LOGOUT}
+}
+
+export function clearRedirect() {
+  return {type: CLEAR_REDIRECT}
 }
 
 // 登录

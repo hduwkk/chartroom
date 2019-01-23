@@ -1,28 +1,32 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {Route, Switch, Redirect} from 'react-router-dom'
+import {Route, Switch} from 'react-router-dom'
 import NavLinkBar from '../navlink/navlink'
 import {NavBar,Icon, Result} from 'antd-mobile'
+import {recvMsg, getMsgList} from '../../redux/chat.redux'
 
 import Genius from '../genius/genius'
 import Boss from '../boss/boss'
 import User from '../user/user'
-
-function Msg(){
-	return <h2>消息列表页面</h2>
-}
+import Msg from '../msg/msg'
 
 const NOT_FOUNT = () => (
   <Result img={<Icon type="cross-circle-o" className="spe" style={{ fill: '#F13642' }} />} 
   title="404 NOT FOUNT" message="啥都没有"/>
 )
 
-@connect(state => state)
+@connect(
+  state => state,
+  {recvMsg, getMsgList}
+)
 class Dashboard extends React.Component {
+  componentDidMount() {
+    this.props.recvMsg() // 监听socket推过来的消息
+    this.props.getMsgList()
+  }
   render() {
     const pathname = this.props.location.pathname
     const user = this.props.user
-    console.log(this.props, '... ...')
     const navList = [
       {
         path: '/boss',

@@ -3,7 +3,7 @@ import {List, InputItem, WingBlank, WhiteSpace, Button} from 'antd-mobile'
 import Logo from '../../component/logo/logo'
 import {connect} from 'react-redux'
 import {Redirect} from 'react-router-dom'
-import {login} from '../../redux/user.redux'
+import {login, clearRedirect} from '../../redux/user.redux'
 import imoocForm from '../../component/imooc-form/imooc-form'
 
 // @imoocForm
@@ -11,7 +11,7 @@ import imoocForm from '../../component/imooc-form/imooc-form'
 
 @connect(
   state => state.user,
-  {login}
+  {login, clearRedirect}
 )
 @imoocForm
 class Login extends React.Component {
@@ -27,6 +27,11 @@ class Login extends React.Component {
 
   handleLogin() {
     this.props.login(this.props.state)
+  }
+
+  componentDidMount() {
+    console.log(this.props.redirectTo, '... ...')
+    this.props.clearRedirect()
   }
 
   render() {
