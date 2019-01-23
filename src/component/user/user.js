@@ -42,7 +42,9 @@ class User extends React.Component {
           <Item onClick={() => this.logout()}>退出登录</Item>
         </List>
       </div>
-    ) : <Redirect to={props.redirectTo} />
+    ) : (
+      props.redirectTo ? <Redirect to={props.redirectTo} /> : null
+    )
   }
 }
 
