@@ -23,7 +23,10 @@ class Msg extends React.Component {
           chatList.map((conversitions) => {
             const c0 = conversitions[0]
             const targetId = c0.from === userid ? c0.to : c0.from
-            const unread = conversitions.filter(({read}) => !read).length
+            const unread = conversitions.filter(({read, from}) => {
+              return !read && from !== userid
+            }).length
+            console.log('unread', unread, c0.content)
             // 头像问题
             return (
               <List key={c0._id}>
@@ -31,6 +34,7 @@ class Msg extends React.Component {
                   extra={<Badge text={unread}></Badge>}
                   thumb={require(`../img/${allUsers[targetId].avatar}.png`)}
                   arrow="horizontal"
+                  onClick={() => this.props.history.push(`/chat/${targetId}`)}
                 >
                   {c0.content}
                   <Brief>{allUsers[targetId].name}</Brief>
