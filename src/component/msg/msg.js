@@ -1,46 +1,62 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {List, Badge} from 'antd-mobile'
+import { createSelector } from 'reselect'
 
-@connect(state => state)
+const getLast = arr => arr[arr.length-1]
+
+const cacheProp = createSelector(
+  [
+    state => state.user,
+    state => state.chat
+  ],
+  (user, chat) => {
+    const msgGroup = {}
+    chat.chatmsg.forEach((v) => {
+      msgGroup[v.chatid] = msgGroup[v.chatid] || []
+      msgGroup[v.chatid].push(v)
+    })
+    const chatList = Object.values(msgGroup).sort((itemA, itemB) => {
+      return getLast(itemA).create_time - getLast(itemB).create_time
+    })
+    console.count('sss')
+    return {user, chatList, users: chat.users}
+  }
+)
+
+console.log('msg.js ... ...')
+
+@connect(state => cacheProp(state))
 class Msg extends React.Component {
   render() {
     const Item = List.Item
     const Brief = Item.Brief
-    const userinfo = this.props.user
-    const allUsers = this.props.chat.users
-    const userid = userinfo._id
+    const userid = this.props.user._id
+    const allUsers = this.props.users
 
-    const msgGroup = {}
-    this.props.chat.chatmsg.forEach((v) => {
-      msgGroup[v.chatid] = msgGroup[v.chatid] || []
-      msgGroup[v.chatid].push(v)
-    })
-    const chatList = Object.values(msgGroup)
     return (
       <div>
         {
-          chatList.map((conversitions) => {
-            const c0 = conversitions[0]
-            const targetId = c0.from === userid ? c0.to : c0.from
+          this.props.chatList.map((conversitions) => {
+            const lastItem = getLast(conversitions)
+            const targetId = lastItem.from === userid ? lastItem.to : lastItem.from
             const unread = conversitions.filter(({read, from}) => {
               return !read && from !== userid
             }).length
-            console.log('unread', unread, c0.content)
             // 头像问题
-            return (
-              <List key={c0._id}>
+            return allUsers[targetId] ? (
+              <List key={lastItem._id}>
                 <Item
                   extra={<Badge text={unread}></Badge>}
                   thumb={require(`../img/${allUsers[targetId].avatar}.png`)}
                   arrow="horizontal"
                   onClick={() => this.props.history.push(`/chat/${targetId}`)}
                 >
-                  {c0.content}
+                  {lastItem.content}
                   <Brief>{allUsers[targetId].name}</Brief>
                 </Item>
               </List>
-            )
+            ) : null
           })
         }
       </div>

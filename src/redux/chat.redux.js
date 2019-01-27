@@ -1,6 +1,6 @@
 import axios from 'axios'
 import io from 'socket.io-client'
-const socket = io('ws://localhost:3456')
+export const socket = io('ws://localhost:3456')
 
 const MSG_LIST = 'MSG_LIST' // 获取聊天列表
 const MSG_RECV = 'MSG_RECV' // 读取信息
@@ -33,10 +33,8 @@ function msgRead({from,userid,num}) {
 
 function msgList(msgs, users, userid) {
   const unread = msgs.filter((msg) => {
-    console.log(msg.read, msg.to, userid, '*****')
     return !msg.read && msg.to === userid
   })
-  console.log(msgs.length, unread.length, userid, 'msgList......')
   return {type: MSG_LIST, payload: {msgs, users, userid, unread}}
 }
 
@@ -58,10 +56,7 @@ export function readMsg(from) {
 
 export function recvMsg() {
   return (dispatch, getState) => {
-    console.log('监听 recvMsg')
     socket.on('recvmsg', function(data) {
-      console.log('recvmsg', data)
-      console.log('getState', getState())
       const userid = getState().user._id
       dispatch(msgRecv(data, userid))
     })

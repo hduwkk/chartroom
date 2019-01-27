@@ -3,6 +3,7 @@ import axios from 'axios'
 import {withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
 import {loadData} from '../../redux/user.redux'
+import {socket} from '../../redux/chat.redux'
 
 @connect(
   null,
@@ -25,6 +26,7 @@ class AuthRoute extends React.Component {
         if (res.data.code === 0) {
           // 有登录信息
           this.props.loadData(res.data.data)
+          socket.emit('setUserId', res.data.data._id)
         } else {
           this.props.history.push('/login')
         }

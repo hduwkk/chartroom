@@ -4,6 +4,7 @@ import {Route, Switch} from 'react-router-dom'
 import NavLinkBar from '../navlink/navlink'
 import {NavBar,Icon, Result} from 'antd-mobile'
 import {recvMsg, getMsgList} from '../../redux/chat.redux'
+import QueueAnim from 'rc-queue-anim'
 
 import Genius from '../genius/genius'
 import Boss from '../boss/boss'
@@ -21,8 +22,12 @@ const NOT_FOUNT = () => (
 )
 class Dashboard extends React.Component {
   componentDidMount() {
-    this.props.recvMsg() // 监听socket推过来的消息
-    this.props.getMsgList()
+    console.log('dashboard ... ...')
+    if (!this.props.chat.chatmsg.length) {
+      console.log('*** 执行 recvMsg(), getMsgList() ***')
+      this.props.recvMsg() // 监听socket推过来的消息
+      this.props.getMsgList() // 获取所有users, msgs
+    }
   }
   render() {
     const pathname = this.props.location.pathname
@@ -61,18 +66,23 @@ class Dashboard extends React.Component {
     ]
     const pageInfo = navList.find(v => v.path === pathname)
     const title = pageInfo ? pageInfo.title : '404 NOT FOUND'
+
+    const currentPage = navList.find(v => v.path==pathname)
     return (
       <div>
         <NavBar className='fixd-header' mode='dard'>{title}</NavBar>
         <div style={{marginTop:45, marginBottom: 60}}>
-						<Switch>
+						{/* <Switch>
 							{navList.map(v=>(
 								<Route key={v.path} path={v.path} component={v.component}></Route>
               ))}
               {
                 pageInfo ? null : <Route component={NOT_FOUNT}></Route>
               }
-						</Switch>
+						</Switch> */}
+            <QueueAnim duration={500}>
+								<Route key={currentPage.path} path={currentPage.path} component={currentPage.component}></Route>
+            </QueueAnim>
 				</div>
         <NavLinkBar data={navList}></NavLinkBar>
       </div>

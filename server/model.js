@@ -22,7 +22,7 @@ const models = {
     'from': {type: String, require: true},
     'to': {type: String, require: true},
     'content': {type: String, require: true, default: ''},
-    'create_time': {type: Number, require: true, default: Date.now()},
+    'create_time': {type: Number, require: true, default: Date.now},
     'read': {type: Boolean, default: false}
   }
 }

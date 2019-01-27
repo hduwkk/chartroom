@@ -1,4 +1,5 @@
 import Axios from 'axios'
+import {socket} from './chat.redux'
 import {Toast} from 'antd-mobile'
 const AUTH_SUCCESS = 'AUTH_SUCCESS'
 const LOGOUT = 'LOGOUT'
@@ -67,16 +68,17 @@ export function login({user, pwd}) {
     console.log('?? ??')
     return errorMsg('用户名密码必须输入！')
   }
-  return dispatch => {
+  return dispatch => (
     Axios.post('/user/login', {user, pwd}).then((res) => {
       if (res.status === 200 && res.data.code === 0) {
         dispatch(authSuccess(res.data.data))
+        socket.emit('setUserId', res.data.data._id)
       } else {
         Toast.fail(res.data.msg || '后台错误')
         dispatch(errorMsg(res.data.msg))
       }
     })
-  }
+  )
 }
 
 // 注册

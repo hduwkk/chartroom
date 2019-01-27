@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux';
-import {List, InputItem, NavBar, Icon, Grid} from 'antd-mobile'
+import {InputItem, NavBar, Icon, Grid} from 'antd-mobile'
 import {getMsgList, sendMsg, readMsg} from '../../redux/chat.redux'
 import {getChatId} from '../../util'
 import './chat.css'
@@ -54,7 +54,6 @@ class Chat extends React.Component {
                    '💩 👌 👍 🙅‍ ❤️ 🔥 🍇 🍈 🍌 🙈 🙉 🙊 🐶 ').split(' ')
 										.filter(v=>v)
                     .map(v=>({text:v}))
-    const Item = List.Item
     const users = this.props.chat.users
     const targetid = this.props.match.params.user
     if (!users[targetid]) return null
