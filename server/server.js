@@ -11,24 +11,26 @@ const userRouter = require('./User')
 // 数据model
 const model = require('./model')
 const Chat = model.getModel('chat')
-
 const socketidMap = {} // userid: socketid
 
 io.on('connection', (socket) => {
+  socket.emit('socketid', socket.id)
   socket.on('setUserId', function(userid) {
     socketidMap[userid] = socket.id
+    console.log('setUserId', socket.id)
   })
+
   socket.on('sendmsg', function(data) {
     const {from, to, msg} = data
     const chatid = [from, to].sort().join('_')
-    console.log(socket.userid, 'userid')
     const targetSocketId = socketidMap[to]
     console.log(targetSocketId, 'targetSocketId')
+    console.log(msg, 'sendmsg')
     Chat.create({chatid, from, to, content: msg}, function(err, doc) {
-      const message = Object.assign({}, doc._doc)
+      const message = Object.assign({}, doc._doc) || {a: 1111111}
       socket.emit('recvmsg', message)
       if (targetSocketId) {
-        io.to(targetSocketId).emit('recvmsg', message)
+        socket.to(targetSocketId).emit('recvmsg', {test: '测试...'})
       }
     })
   })

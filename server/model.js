@@ -6,6 +6,8 @@ mongoose.connection.on('connected', function() {
   console.log('mongoose connected ... ...')
 })
 
+mongoose.connection.on('error', console.error.bind('*** 数据库连接失败 ***'))
+
 const models = {
   user: {
     user: {type: String, require: true},
@@ -15,7 +17,9 @@ const models = {
     desc: {type: String}, // 个人简介或者职位简介
     title: {type: String}, // 职位名
     company: {type: String}, // boss: 公司
-    money: {type: String} // boss: 薪资
+    money: {type: String}, // boss: 薪资
+    socketid: {type: String},
+    socketcreatetime: {type: Number, default: 0}
   },
   chat: {
     'chatid': {'type': String, require: true},

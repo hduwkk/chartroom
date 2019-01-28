@@ -72,6 +72,7 @@ export function login({user, pwd}) {
     Axios.post('/user/login', {user, pwd}).then((res) => {
       if (res.status === 200 && res.data.code === 0) {
         dispatch(authSuccess(res.data.data))
+        console.log(res.data.data._id, 'setUserId')
         socket.emit('setUserId', res.data.data._id)
       } else {
         Toast.fail(res.data.msg || '后台错误')

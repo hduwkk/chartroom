@@ -1,7 +1,9 @@
 import axios from 'axios'
 import io from 'socket.io-client'
 export const socket = io('ws://localhost:3456')
-
+socket.on('socketid', function (data) {
+  console.log('socketid', data)
+})
 const MSG_LIST = 'MSG_LIST' // 获取聊天列表
 const MSG_RECV = 'MSG_RECV' // 读取信息
 const MSG_READ = 'MSG_READ' // 已读信息
@@ -57,6 +59,7 @@ export function readMsg(from) {
 export function recvMsg() {
   return (dispatch, getState) => {
     socket.on('recvmsg', function(data) {
+      console.log('recvmsg', data)
       const userid = getState().user._id
       dispatch(msgRecv(data, userid))
     })

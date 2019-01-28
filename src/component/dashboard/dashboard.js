@@ -1,8 +1,8 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {Route, Switch} from 'react-router-dom'
+import {Route} from 'react-router-dom'
 import NavLinkBar from '../navlink/navlink'
-import {NavBar,Icon, Result} from 'antd-mobile'
+import {NavBar} from 'antd-mobile'
 import {recvMsg, getMsgList} from '../../redux/chat.redux'
 import QueueAnim from 'rc-queue-anim'
 
@@ -10,11 +10,6 @@ import Genius from '../genius/genius'
 import Boss from '../boss/boss'
 import User from '../user/user'
 import Msg from '../msg/msg'
-
-const NOT_FOUNT = () => (
-  <Result img={<Icon type="cross-circle-o" className="spe" style={{ fill: '#F13642' }} />} 
-  title="404 NOT FOUNT" message="啥都没有"/>
-)
 
 @connect(
   state => state,
@@ -67,21 +62,15 @@ class Dashboard extends React.Component {
     const pageInfo = navList.find(v => v.path === pathname)
     const title = pageInfo ? pageInfo.title : '404 NOT FOUND'
 
-    const currentPage = navList.find(v => v.path==pathname)
+    const currentPage = navList.find(v => v.path === pathname)
     return (
       <div>
         <NavBar className='fixd-header' mode='dard'>{title}</NavBar>
         <div style={{marginTop:45, marginBottom: 60}}>
-						{/* <Switch>
-							{navList.map(v=>(
-								<Route key={v.path} path={v.path} component={v.component}></Route>
-              ))}
+            <QueueAnim type='left'>
               {
-                pageInfo ? null : <Route component={NOT_FOUNT}></Route>
+                <Route key={currentPage.path} path={currentPage.path} component={currentPage.component}></Route>
               }
-						</Switch> */}
-            <QueueAnim duration={500}>
-								<Route key={currentPage.path} path={currentPage.path} component={currentPage.component}></Route>
             </QueueAnim>
 				</div>
         <NavLinkBar data={navList}></NavLinkBar>
