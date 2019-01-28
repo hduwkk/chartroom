@@ -14,7 +14,7 @@ const Chat = model.getModel('chat')
 const socketidMap = {} // userid: socketid
 
 io.on('connection', (socket) => {
-  socket.emit('socketid', socket.id)
+  socket.emit('socketid', socketidMap)
   socket.on('setUserId', function(userid) {
     socketidMap[userid] = socket.id
     console.log('setUserId', socket.id)
@@ -30,7 +30,7 @@ io.on('connection', (socket) => {
       const message = Object.assign({}, doc._doc) || {a: 1111111}
       socket.emit('recvmsg', message)
       if (targetSocketId) {
-        socket.to(targetSocketId).emit('recvmsg', {test: '测试...'})
+        io.to(targetSocketId).emit('recvmsg', {test: '测试...'})
       }
     })
   })

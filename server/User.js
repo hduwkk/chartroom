@@ -24,6 +24,9 @@ Router.get('/list', (req, res) => {
 Router.get('/getmsglist', (req, res) => {
   const userid = req.cookies.userid
   User.find({}, function(e, userdoc) {
+    if (e) {
+      return res.json({code: 1, msgs: [], users: {}, err: `【${userid}】 can not find`})
+    }
     let users = {}
     userdoc.forEach(({_id, user, avatar}) => {
       users[_id] = {name: user, avatar}
