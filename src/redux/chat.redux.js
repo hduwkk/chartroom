@@ -4,6 +4,13 @@ export const socket = io('ws://localhost:3456')
 socket.on('socketid', function (data) {
   console.log('socketid', data)
 })
+socket.on('connect', function() {
+  console.log('socket.io connectd ... ...')
+})
+socket.on('disconnect', function() {
+  console.log('socket.io disconnect *** ***')
+})
+
 const MSG_LIST = 'MSG_LIST' // 获取聊天列表
 const MSG_RECV = 'MSG_RECV' // 读取信息
 const MSG_READ = 'MSG_READ' // 已读信息
@@ -11,7 +18,8 @@ const MSG_READ = 'MSG_READ' // 已读信息
 const initState = {
   chatmsg: [],
   users: {},
-  unread: 0
+  unread: 0,
+  recvmsgInit: false
 }
 
 export function chat (state = initState, action) {
@@ -20,7 +28,7 @@ export function chat (state = initState, action) {
       return {...state, users: action.payload.users, chatmsg: action.payload.msgs, unread: action.payload.unread.length}
     case MSG_RECV:
       const n = action.payload.msg.to === action.payload.userid ? 1 : 0
-      return {...state, chatmsg: [...state.chatmsg, action.payload.msg], unread: state.unread + n}
+      return {...state, chatmsg: [...state.chatmsg, action.payload.msg], unread: state.unread + n, recvmsgInit: true}
     case MSG_READ:
       // const {from, num} = action.payload
       return {...state, chatmsg: state.chatmsg}
@@ -58,6 +66,8 @@ export function readMsg(from) {
 
 export function recvMsg() {
   return (dispatch, getState) => {
+    console.log('init recvmsg ... ...')
+    dispatch(msgRecv({}))
     socket.on('recvmsg', function(data) {
       console.log('recvmsg', data)
       const userid = getState().user._id

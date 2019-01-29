@@ -24,8 +24,6 @@ const cacheProp = createSelector(
   }
 )
 
-console.log('msg.js ... ...')
-
 @connect(state => cacheProp(state))
 class Msg extends React.Component {
   render() {

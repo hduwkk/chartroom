@@ -1,13 +1,13 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import {InputItem, NavBar, Icon, Grid} from 'antd-mobile'
-import {getMsgList, sendMsg, readMsg} from '../../redux/chat.redux'
+import {getMsgList, sendMsg, readMsg, recvMsg} from '../../redux/chat.redux'
 import {getChatId} from '../../util'
 import './chat.css'
 
 @connect(
   state => state,
-  {getMsgList, sendMsg, readMsg}
+  {getMsgList, sendMsg, recvMsg, readMsg}
 )
 class Chat extends React.Component {
   constructor(props) {
@@ -20,17 +20,12 @@ class Chat extends React.Component {
     this.fixCarousel = this.fixCarousel.bind(this)
   }
   componentDidMount() {
-    if (!this.props.chat.chatmsg.length) {
+    if (!this.props.chat.recvmsgInit) {
       this.props.getMsgList()
-      this.fixCarousel()
+      this.props.recvMsg()
     }
-    // document.addEventListener('touchmove', function(e) {
-      // e.preventDefault()
-      // e.stopPropagation()
-    // })
   }
   componentWillUnmount() {
-    // 我点开了某个消息列表
     const to = this.props.match.params.user
     this.props.readMsg(to)
   }

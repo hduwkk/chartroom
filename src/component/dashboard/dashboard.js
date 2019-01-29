@@ -18,7 +18,7 @@ import Msg from '../msg/msg'
 class Dashboard extends React.Component {
   componentDidMount() {
     console.log('dashboard ... ...')
-    if (!this.props.chat.chatmsg.length) {
+    if (!this.props.chat.recvmsgInit) {
       console.log('*** 执行 recvMsg(), getMsgList() ***')
       this.props.recvMsg() // 监听socket推过来的消息
       this.props.getMsgList() // 获取所有users, msgs
@@ -63,6 +63,7 @@ class Dashboard extends React.Component {
     const title = pageInfo ? pageInfo.title : '404 NOT FOUND'
 
     const currentPage = navList.find(v => v.path === pathname)
+    if (!currentPage) return null
     return (
       <div>
         <NavBar className='fixd-header' mode='dard'>{title}</NavBar>
