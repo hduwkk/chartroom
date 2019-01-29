@@ -1,26 +1,23 @@
 import express from 'express'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
-import path from 'path'
-import {renderToString} from 'react-dom/server'
-import csshook from 'css-modules-require-hook'
+import csshook from 'css-modules-require-hook/preset'
 import assethook from 'asset-require-hook'
-
+import staticPath from '../build/asset-manifest.json'
 
 import React from 'react'
-import {createStore, applyMiddleware} from 'redux'
+import {renderToString} from 'react-dom/server'
+import {createStore, applyMiddleware, compose} from 'redux'
 import {StaticRouter} from 'react-router-dom'
 import thunk from 'redux-thunk'
 import {Provider} from 'react-redux'
-require('asset-require-hook')({
-  extensions: ['png']
-})
 
 import reducer from '../src/reducer'
 import '../src/config'
 import '../src/index.css'
 
 import App from '../src/app'
+assethook({extensions: ['png']})
 
 const app = express()
 const server = require('http').createServer(app)
@@ -31,7 +28,6 @@ const model = require('./model')
 const Chat = model.getModel('chat')
 
 const socketidMap = {} // userid: socketid
-
 io.on('connection', (socket) => {
   socket.emit('socketid', socketidMap)
   socket.on('setUserId', function(userid) {
@@ -63,6 +59,7 @@ io.on('connection', (socket) => {
 
 // 路由
 const userRouter = require('./User')
+const path = require('path')
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -86,7 +83,27 @@ app.use(function(req, res, next) {
       </StaticRouter>
     </Provider>))
 
-  res.send(markup)
+    const layout = `<!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <meta charset="utf-8" />
+        <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, shrink-to-fit=no"
+        />
+        <meta name="theme-color" content="#000000" />
+        <link rel="stylesheet" href="/${staticPath['main.css']}" />
+        <title>React App</title>
+      </head>
+      <body>
+        <noscript>You need to enable JavaScript to run this app.</noscript>
+        <div id="root">${markup}</div>
+      </body>
+    </html>`
+
+
+  res.send(layout)
   // return res.sendFile(path.resolve('build/index.html'))
 })
 
