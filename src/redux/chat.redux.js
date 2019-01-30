@@ -1,6 +1,6 @@
 import axios from 'axios'
 import io from 'socket.io-client'
-export const socket = io('ws://localhost:3456')
+export const socket = io('ws://localhost:9093')
 socket.on('socketid', function (data) {
   console.log('socketid', data)
 })
