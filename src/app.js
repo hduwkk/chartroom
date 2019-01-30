@@ -9,10 +9,21 @@ import BossInfo from './container/bossinfo/bossinfo'
 import Geniusinfo from './container/geniusinfo/geniusinfo'
 import Dashboard from './component/dashboard/dashboard'
 import Chat from './component/chat/chat'
-
 class App extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      hasError: false
+    }
+  }
+  componentDidCatch() {
+    console.log('error')
+    this.setState({
+      hasError: true
+    })
+  }
   render() {
-    return (
+    return this.state.hasError ? (<h2>出错了</h2>) :(
       <div>
         <AuthRoute></AuthRoute>
         <Switch>

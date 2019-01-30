@@ -11,7 +11,7 @@ import {socket} from '../../redux/chat.redux'
 )
 @withRouter
 class AuthRoute extends React.Component {
-  componentWillMount() {
+  componentDidMount() {
     // 获取用户信息
     // 是否登录，现在url地址 login 不需要跳转
     // 用户的type、身份
